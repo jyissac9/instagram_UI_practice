@@ -4,43 +4,55 @@ import { Card, CardItem, Thumbnail, Body, Left, Right, Button, Icon } from 'nati
 
 export default class CardComponent extends Component {
     render() {
+        const { data } = this.props;
+        const { image } = JSON.parse(data.json_metadata);
         return (
             <Card>
                 <CardItem>
                     <Left>
-                        <Thubnail source={{ uri: 'https://steemitimages.com/u/anpigon/avatar' }} />
+                        <Thumbnail source={{ uri: 'https://steemitimages.com/u/anpigon/avatar' }} />
                         <Body>
-                            <Text>Anpigon</Text>
-                            <Text note>Jan 21, 2019</Text>
+                            <Text>{data.author}</Text>
+                            <Text note>{new Date(data.created).toDateString()}</Text>
                         </Body>
                     </Left>
                 </CardItem>
-                <CardItem cardBody>
-                    <Image 
-                        source={{ uri: 'https://user-images.githubusercontent.com/3969643/51441420-b41f1c80-1d14-11e9-9f5d-af5cd3a6aaae.png' }}
-                        style={{ height: 200, width: null, flex: 1 }} />
-                </CardItem>
-                <CardItem style={{ height: 45 }}>
-                    <Left>
-                        <Buton transparent>
-                            <Icon name='ios-heart' style={{ color: 'black' }}/>
-                        </Buton>
-                        <Buton transparent>
-                            <Icon name='ios-chatbubboes' style={{ color: 'black' }} />
-                        </Buton>
-                        <Buton transparent>
-                            <Icon name='ios-send' style={{ color: 'black' }} />
-                        </Buton>
-                    </Left>
-                </CardItem>
+                {
+                    image && image.length ?
+                    <CardItem cardBody>
+                        <Image
+                            source={{ uri: image[0] }}
+                            style={{ height: 200, width: null, flex: 1 }} />
+                    </CardItem> : null
+                }
                 <CardItem style={{ height: 20 }}>
-                    <Text>101 likes</Text>
+                    <Text>{ data.active_votes.length } likes</Text>
+                </CardItem>
+                <CardItem>
+                    <Text style={{ fontWeight:'900' }}>{ data.title }</Text>
                 </CardItem>
                 <CardItem>
                     <Text>
-                        <Text style={{ fontWeight: '900' }}>Anpigon</Text>
-                            이번에는 리액트 네이티브(React Native)로 인스타그램 UI을 구현하는 포스팅입니다.
+                    { data.body.replace(/\n/g,' ').slice(0, 200) }
                     </Text>
+                </CardItem>
+                <CardItem style={{ height: 45 }}>
+                    <Left>
+                        <Button transparent>
+                            <Icon name='ios-heart' style={{ color: 'black', marginRight: 5 }}/>
+                            <Text>{ data.active_votes.length }</Text>
+                        </Button>
+                        <Button transparent>
+                            <Icon name='ios-chatbubbles' style={{ color: 'black', marginRight: 5 }} />
+                            <Text>{ data.children }</Text>
+                        </Button>
+                        <Button transparent>
+                            <Icon name='ios-send' style={{ color: 'black' }} />
+                        </Button>
+                    </Left>
+                    <Right>
+                        <Text>{ data.pending_payout_value }</Text>
+                    </Right>
                 </CardItem>
             </Card>
         );
